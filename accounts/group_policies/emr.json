@@ -1,0 +1,27 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1427322785000",
+            "Effect": "Allow",
+            "Action": [
+                "elasticmapreduce:AddTags",
+                "elasticmapreduce:AddJobFlowSteps",
+                "elasticmapreduce:DescribeCluster",
+                "elasticmapreduce:DescribeJobFlows",
+                "elasticmapreduce:DescribeStep",
+                "elasticmapreduce:ListBootstrapActions",
+                "elasticmapreduce:ListClusters",
+                "elasticmapreduce:ListInstanceGroups",
+                "elasticmapreduce:ListInstances",
+                "elasticmapreduce:ListSteps",
+                "elasticmapreduce:RemoveTags",
+                "elasticmapreduce:RunJobFlow",
+                "elasticmapreduce:TerminateJobFlows"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
