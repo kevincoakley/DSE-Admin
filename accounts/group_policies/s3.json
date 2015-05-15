@@ -32,6 +32,16 @@
             "Resource": [
                 "arn:aws:s3:::dse-${aws:username}/*"
             ]
+        },
+        {
+            "Sid": "Stmt1431728110000",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::mas-dse-emr/log/*"
+            ]
         }
     ]
 }
