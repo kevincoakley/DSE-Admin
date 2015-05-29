@@ -42,6 +42,16 @@
             "Resource": [
                 "arn:aws:s3:::mas-dse-emr/log/*"
             ]
+        },
+        {
+            "Sid": "Stmt1431728110001",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::dse-iri-dataset/*"
+            ]
         }
     ]
 }
