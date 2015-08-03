@@ -7,7 +7,9 @@ import sys
 import argparse
 import logging
 import boto
-import dse_credentials
+from ucsd_bigdata.vault import Vault
+from ucsd_bigdata.credentials import Credentials
+
 
 if __name__ == "__main__":
     # parse parameters
@@ -26,29 +28,30 @@ if __name__ == "__main__":
 
     args = vars(parser.parse_args())
 
-    # Get vault location
-    vault = dse_credentials.get_vault()
+    # Get the vault from ~/.vault or default to ~/Vault
+    vault = Vault()
 
     # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(vault + "/logs"):
-        os.makedirs(vault + "/logs")
+    if not os.path.exists(vault.path + "/logs"):
+        os.makedirs(vault.path + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=vault + "/logs/add_group.log", format='%(asctime)s %(message)s',
+    logging.basicConfig(filename=vault.path + "/logs/add_group.log", format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("add_group.py started")
     logging.info("IAM Group Name: %s" % args['iam_group_name'])
     logging.info("Policy File: %s" % args['policy_file'])
-    logging.info("Vault: %s" % vault)
+    logging.info("Vault: %s" % vault.path)
 
-    # Read AWS key_id and key_secret from vault
-    aws_access_key_id, aws_secret_access_key = dse_credentials.read_credentials(vault)
+    # Get the AWS credentials from the User's Vault
+    credentials = Credentials()
+    credentials.get(json_object_name="admin")
 
     # Open connection to aws
     try:
-        iam = boto.connect_iam(aws_access_key_id=aws_access_key_id,
-                               aws_secret_access_key=aws_secret_access_key)
+        iam = boto.connect_iam(aws_access_key_id=credentials.aws_access_key_id,
+                               aws_secret_access_key=credentials.aws_secret_access_key)
         logging.info("Created Connection = %s" % iam)
         print "Created Connection = %s" % iam
     except Exception, e:

@@ -7,7 +7,8 @@ import random
 import argparse
 import logging
 import csv
-import dse_credentials
+from ucsd_bigdata.vault import Vault
+from ucsd_bigdata.credentials import Credentials
 
 
 def random_password_generator():
@@ -53,29 +54,30 @@ if __name__ == "__main__":
 
     args = vars(parser.parse_args())
 
-    # Get vault location
-    vault = dse_credentials.get_vault()
+    # Get the vault from ~/.vault or default to ~/Vault
+    vault = Vault()
 
     # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(vault + "/logs"):
-        os.makedirs(vault + "/logs")
+    if not os.path.exists(vault.path + "/logs"):
+        os.makedirs(vault.path + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=vault + "/logs/add_students.log", format='%(asctime)s %(message)s',
+    logging.basicConfig(filename=vault.path + "/logs/add_students.log", format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("add_users.py started")
     logging.info("CSV File: %s" % args['csv_file'])
     logging.info("Output Path: %s" % args['output'])
-    logging.info("Vault: %s" % vault)
+    logging.info("Vault: %s" % vault.path)
 
-    # Read AWS key_id and key_secret from vault
-    aws_access_key_id, aws_secret_access_key = dse_credentials.read_credentials(vault)
+    # Get the AWS credentials from the User's Vault
+    credentials = Credentials()
+    credentials.get(json_object_name="admin")
 
     # Open IAM connection to aws
     try:
-        iam = boto.connect_iam(aws_access_key_id=aws_access_key_id,
-                               aws_secret_access_key=aws_secret_access_key)
+        iam = boto.connect_iam(aws_access_key_id=credentials.aws_access_key_id,
+                               aws_secret_access_key=credentials.aws_secret_access_key)
         logging.info("Created IAM Connection = %s" % iam)
         print "Created IAM Connection = %s" % iam
     except Exception, e:
@@ -84,8 +86,8 @@ if __name__ == "__main__":
 
     # Open S3 connection to aws
     try:
-        s3 = boto.connect_s3(aws_access_key_id=aws_access_key_id,
-                             aws_secret_access_key=aws_secret_access_key)
+        s3 = boto.connect_s3(aws_access_key_id=credentials.aws_access_key_id,
+                             aws_secret_access_key=credentials.aws_secret_access_key)
         logging.info("Created S3 Connection = %s" % s3)
         print "Created S3 Connection = %s" % s3
     except Exception, e:
@@ -157,7 +159,7 @@ if __name__ == "__main__":
 
             # Get the path the save the credentials
             if (args['output'] is None) or (len(args['output']) == 0):
-                output_path = "%s/users/" % vault
+                output_path = "%s/users/" % vault.path
             else:
                 output_path = args['output']
 
@@ -194,7 +196,7 @@ if __name__ == "__main__":
                 sys.exit("There was an error writing the credentials file %s: %s" % (credentials_text_file, e))
 
             # Create an s3 bucket for the user
-            if args['s3'] == "True":
+            if args['s3'] is True:
                 s3_bucket = "dse-%s" % user_name
                 try:
                     s3.create_bucket(s3_bucket)
