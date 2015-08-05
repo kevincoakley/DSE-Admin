@@ -117,7 +117,7 @@ def share(directory_id, google_username):
 if __name__ == '__main__':
     # parse parameters
     parser = argparse.ArgumentParser(description="Share files with students using Google Drive",
-                                     epilog="Example: ./share_files.py -r DSE_2015")
+                                     epilog="Example: ./share_credentials.py -r DSE_2015")
     parser.add_argument("-l",
                         metavar="local_directory",
                         dest="local_directory",
@@ -144,12 +144,12 @@ if __name__ == '__main__':
     if not os.path.exists(vault.path + "/logs"):
         os.makedirs(vault.path + "/logs")
 
-    # Save a log to vault/logs/share_files.log
-    logging.basicConfig(filename=vault.path + "/logs/share_files.log",
+    # Save a log to vault/logs/share_credentials.py.log
+    logging.basicConfig(filename=vault.path + "/logs/share_credentials.log",
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
-    logging.info("share_files.py started")
+    logging.info("share_credentials.py started")
     logging.info("Local Directory: %s" % local_directory)
     logging.info("Remote Directory: %s" % args["remote_directory"])
     logging.info("Vault: %s" % vault.path)
@@ -188,4 +188,4 @@ if __name__ == '__main__':
             file_path = "%s/%s" % (path, f)
             upload_file(file_path, path_ids[relative_path])
 
-    logging.info("share_files.py finished")
+    logging.info("share_credentials.py finished")
