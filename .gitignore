@@ -104,4 +104,6 @@ docs/_build/
 # PyBuilder
 target/
 
+# Don't save Google API's client_secret.json
+client_secret.json
 
