@@ -167,12 +167,16 @@ if __name__ == "__main__":
             if not output_path.endswith("/"):
                 output_path = "%s/" % output_path
 
-            # Create the output_path if it doesn't exists
+            # Create the output_path if it doesn't exist
             if not os.path.exists(output_path):
                 os.makedirs(output_path)
 
-            console_text_file = "%s%s_aws_console_password.txt" % (output_path, user_name)
-            credentials_text_file = "%s%s_aws_credentials.csv" % (output_path, user_name)
+            # Create a directory for the user if it doesn't exist
+            if not os.path.exists("%s%s/" % (output_path, user_name)):
+                os.makedirs("%s/%s/" % (output_path, user_name))
+
+            console_text_file = "%s%s/%s_aws_console_password.txt" % (output_path, user_name, user_name)
+            credentials_text_file = "%s%s/%s_aws_credentials.csv" % (output_path, user_name, user_name)
 
             try:
                 console_text = open(console_text_file, "w")
