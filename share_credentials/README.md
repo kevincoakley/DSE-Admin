@@ -7,6 +7,7 @@ SHARE_CREDENTIALS
 Drive API and download the client_secret.json file
 2. Copy client_secret.json to your Vault directory
 3. Install google-api-python-client: `$ pip install --upgrade google-api-python-client`
+4. Install https://github.com/mas-dse/UCSD_BigData_Scripts: `$ pip install git+https://github.com/mas-dse/UCSD_BigData_Scripts.git`
 
 ## Run
 
