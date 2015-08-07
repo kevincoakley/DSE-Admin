@@ -3,6 +3,8 @@
 import httplib2
 import os
 import sys
+import csv
+import time
 from apiclient import discovery
 import oauth2client
 from oauth2client import client
@@ -111,7 +113,7 @@ def share(directory_id, google_username):
     logging.info("Directory %s Shared with %s" % (directory_id, google_username))
     logging.info("Share URL: %s" % share_url)
 
-    return share_url
+    return google_username, share_url
 
 
 if __name__ == '__main__':
@@ -168,6 +170,10 @@ if __name__ == '__main__':
 
     path_ids["/"] = create_directory(args["remote_directory"])
 
+    # Save the share urls to a csv file
+    csv_file = csv.writer(open("%s/share_urls_%s.csv" % (local_directory,
+                                                         time.strftime("%Y%m%d%H%M%S")),  "ab+"))
+
     for path, dirs, files in os.walk(local_directory):
         relative_path = path.replace(local_directory, "/")
 
@@ -182,9 +188,11 @@ if __name__ == '__main__':
 
         # If the parent is the root directory then share the directory with the student
         if path_ids[parent] == path_ids["/"]:
-            share(path_ids[relative_path], directory_name)
+            csv_file.writerow(share(path_ids[relative_path], directory_name))
 
         for f in files:
+            if "share_urls" in f:
+                continue
             file_path = "%s/%s" % (path, f)
             upload_file(file_path, path_ids[relative_path])
 
