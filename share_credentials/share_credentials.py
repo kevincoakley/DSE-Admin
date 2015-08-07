@@ -105,7 +105,8 @@ def share(directory_id, google_username):
 
     service.permissions().insert(fileId=directory_id,
                                  body=body,
-                                 sendNotificationEmails=False).execute()
+                                 sendNotificationEmails=args["send_email"],
+                                 emailMessage=args["email_message"]).execute()
     share_url = "https://drive.google.com/a/eng.ucsd.edu/folderview?id=%s&usp=sharing" \
                 % directory_id
     print "Directory %s Shared with %s" % (directory_id, google_username)
@@ -131,6 +132,18 @@ if __name__ == '__main__':
                         metavar="remote_directory",
                         help="Name of folder on Google Drive",
                         required=True)
+
+    parser.add_argument("-e",
+                        dest="send_email",
+                        action="store_true",
+                        help="Have Google email student about the shared directory")
+
+    parser.add_argument("-m",
+                        metavar="email_message",
+                        dest="email_message",
+                        help="Message to be included with the email sent from Google ",
+                        default=None,
+                        required=False)
 
     args = vars(parser.parse_args())
 
