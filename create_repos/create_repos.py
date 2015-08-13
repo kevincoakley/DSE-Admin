@@ -100,11 +100,19 @@ if __name__ == '__main__':
                         help="Name of the class's team. Example: \"2014 Students\".",
                         default=None,
                         required=True)
+
     parser.add_argument("-c",
                         dest="csv_file",
                         metavar="csv_file",
                         help="Location of the user CSV file.",
                         required=True)
+
+    parser.add_argument("-t",
+                        dest="github_token",
+                        metavar="github_token",
+                        help="GitHub personal access token, used to bypass login for 2fa accounts.",
+                        default=None,
+                        required=False)
 
     args = vars(parser.parse_args())
 
@@ -124,7 +132,12 @@ if __name__ == '__main__':
     logging.info("CSV File: %s" % args['csv_file'])
     logging.info("Class Year: %s" % args['class_year'])
 
-    github = github_login()
+    # If the user specified a GitHub personal access token then skip asking for a username and
+    # password to allow admins with two factor authentication enabled to run the script.
+    if args["github_token"] is None:
+        github = github_login()
+    else:
+        github = github3.login(token=args["github_token"])
 
     try:
         class_organization = github.organization(organization_name)
