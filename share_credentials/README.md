@@ -1,6 +1,7 @@
 SHARE_CREDENTIALS
 =================
 
+
 ## Setup
 
 1. Follow step 1 at https://developers.google.com/drive/web/quickstart/python to enable the Google 
@@ -9,12 +10,14 @@ Drive API and download the client_secret.json file
 3. Install google-api-python-client: `$ pip install --upgrade google-api-python-client`
 4. Install https://github.com/mas-dse/UCSD_BigData_Scripts: `$ pip install git+https://github.com/mas-dse/UCSD_BigData_Scripts.git`
 
-## Run
 
-1. Copy all files from Vault/users to Google Drive: `$ ./share_files.py -r google_drive_folder_name`
+## Share Credentials using Google Drive
+
+1. Copy all files from Vault/users to Google Drive: `$ share_files.py -r google_drive_folder_name`
   * *NOTE*: 
     * Directories Vault/users/username will be shared with username@eng.ucsd.edu
     * Directories Vault/users/google@account.name will be shared with google@account.name
+
 
 ### Google Drive Documentation
 
