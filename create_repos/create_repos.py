@@ -10,7 +10,8 @@ import logging
 from ucsd_bigdata.vault import Vault
 
 organization_name = "mas-dse"
-
+course_directories = ["DSE200", "DSE290", "DSE210", "DSE201", "DSE220", "DSE230", "DSE203",
+                      "DSE260A", "DSE260B"]
 
 def github_login():
     try:
@@ -71,11 +72,27 @@ def create_repository(organization, ucsd_username, year):
         if repository is None:
             logging.info("Creating new repository: %s/%s" % (organization_name, ucsd_username))
             repository = organization.create_repository(ucsd_username, "DSE %s" % year,
-                                                        private=True)
+                                                        private=True,
+                                                        auto_init=True)
             print "Repository %s/%s created" % (organization_name, ucsd_username)
             logging.info("Repository %s/%s created" % (organization_name, ucsd_username))
 
     return repository
+
+
+def create_repository_folders(repo):
+    logging.info("Creating course directories in the repository")
+    for course_directory in course_directories:
+        logging.info("Checking if the %s directory is in the repository" % course_directory)
+        logging.info("Repository contents: %s" % repo.directory_contents("/"))
+
+        if not any(directory[0] == course_directory for directory in repo.directory_contents("/")):
+            logging.info("Creating %s in repository" % course_directory)
+            repo.create_file("%s/README.md" % course_directory,
+                             "Created %s/README.md" % course_directory,
+                             "Directory for %s" % course_directory)
+        else:
+            logging.info("The %s directory already exists in the repository" % course_directory)
 
 
 def add_repository_to_team(team, repo):
@@ -177,6 +194,9 @@ if __name__ == '__main__':
 
         # If the student repository doesn't exist then create it
         student_repo = create_repository(class_organization, user_row[0], args["class_year"])
+
+        # Create a directory for each DSE course using the course_directories list
+        create_repository_folders(student_repo)
 
         # Add the student repository to the student team
         add_repository_to_team(student_team, student_repo)
