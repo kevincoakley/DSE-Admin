@@ -71,7 +71,8 @@ def create_repository(organization, ucsd_username, year):
         if repository is None:
             logging.info("Creating new repository: %s/%s" % (organization_name, ucsd_username))
             repository = organization.create_repository(ucsd_username, "DSE %s" % year,
-                                                        private=True)
+                                                        private=True,
+                                                        auto_init=True)
             print "Repository %s/%s created" % (organization_name, ucsd_username)
             logging.info("Repository %s/%s created" % (organization_name, ucsd_username))
 
