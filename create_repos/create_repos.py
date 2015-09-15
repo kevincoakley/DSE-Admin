@@ -13,6 +13,7 @@ organization_name = "mas-dse"
 course_directories = ["DSE200", "DSE290", "DSE210", "DSE201", "DSE220", "DSE230", "DSE203",
                       "DSE260A", "DSE260B"]
 
+
 def github_login():
     try:
         user = raw_input('GitHub username: ')
