@@ -10,8 +10,7 @@ import logging
 from ucsd_bigdata.vault import Vault
 
 organization_name = "mas-dse"
-course_directories = ["DSE200", "DSE290", "DSE210", "DSE201", "DSE220", "DSE230", "DSE203",
-                      "DSE260A", "DSE260B"]
+course_directories = ["DSE200", "DSE210", "DSE201", "DSE220", "DSE230", "DSE203"]
 
 
 def github_login():
