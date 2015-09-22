@@ -41,7 +41,7 @@ def create_team(organization, team_name):
 
         if team is None:
             logging.info("Creating new team: %s" % team_name)
-            team = organization.create_team(team_name)
+            team = organization.create_team(team_name, permission="admin")
             print "Team \"%s\" created" % team_name
             logging.info("Team \"%s\" created" % team_name)
 
