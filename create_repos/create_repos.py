@@ -77,6 +77,16 @@ def create_repository(organization, ucsd_username, year):
             print "Repository %s/%s created" % (organization_name, ucsd_username)
             logging.info("Repository %s/%s created" % (organization_name, ucsd_username))
 
+            logging.info("Updating README.md")
+            readme = repository.readme()
+            readme.update("Added welcome message to README.md",
+                          "%s\n========\n\nThis is your MAS-DSE Private GitHub Repository.\n\n"
+                          "A directory has been created for each course.\n\n"
+                          "See [https://mas-dse.github.io/startup/]"
+                          "(https://mas-dse.github.io/startup/) for startup instructions." %
+                          ucsd_username)
+            logging.info("README.md Updated")
+
     return repository
 
 
@@ -90,7 +100,8 @@ def create_repository_folders(repo):
             logging.info("Creating %s in repository" % course_directory)
             repo.create_file("%s/README.md" % course_directory,
                              "Created %s/README.md" % course_directory,
-                             "Directory for %s" % course_directory)
+                             "%s\n======\n\nCourse directory for %s" % (course_directory,
+                                                                        course_directory))
         else:
             logging.info("The %s directory already exists in the repository" % course_directory)
 
