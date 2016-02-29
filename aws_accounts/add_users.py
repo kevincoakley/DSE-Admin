@@ -1,14 +1,18 @@
 #!/usr/bin/env python
 
 import os
+import os.path
 import sys
 import boto
 import random
 import argparse
 import logging
 import csv
-from ucsd_bigdata.vault import Vault
-from ucsd_bigdata.credentials import Credentials
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
+
+from admin_setup.vault import Vault
+from admin_setup.credentials import Credentials
 
 
 def random_password_generator():
@@ -31,6 +35,7 @@ def random_password_generator():
 
 
 if __name__ == "__main__":
+
     # parse parameters
     parser = argparse.ArgumentParser(description="Create IAM users from a CSV file",
                                      epilog="Example: ./add_users.py -c csv_file -o ~/Vault/users/")
@@ -62,7 +67,8 @@ if __name__ == "__main__":
         os.makedirs(vault.path + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=vault.path + "/logs/add_students.log", format='%(asctime)s %(message)s',
+    logging.basicConfig(filename=vault.path + "/logs/add_students.log",
+                        format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("add_users.py started")
@@ -119,8 +125,10 @@ if __name__ == "__main__":
                 iam.create_login_profile(user_name, password)
                 logging.info("Added random password to user %s" % user_name)
             except Exception, e:
-                logging.info("There was an error adding random password (%s) to %s: %s" % (password, user_name, e))
-                sys.exit("There was an error adding random password (%s) to %s: %s" % (password, user_name, e))
+                logging.info("There was an error adding random password (%s) to %s: %s" %
+                             (password, user_name, e))
+                sys.exit("There was an error adding random password (%s) to %s: %s" %
+                         (password, user_name, e))
 
             # Add user to groups
             for user_group in row:
@@ -129,30 +137,36 @@ if __name__ == "__main__":
                         iam.add_user_to_group(user_group, user_name)
                         logging.info("Added user %s to group %s" % (user_name, user_group))
                     except Exception, e:
-                        logging.info("There was an error adding user %s to group %s: %s" % (user_name, user_group, e))
-                        sys.exit("There was an error adding user %s to group %s: %s" % (user_name, user_group, e))
+                        logging.info("There was an error adding user %s to group %s: %s" %
+                                     (user_name, user_group, e))
+                        sys.exit("There was an error adding user %s to group %s: %s" %
+                                 (user_name, user_group, e))
 
             # Create access_key_id/secret_access_key
             try:
                 access_key = iam.create_access_key(user_name)
                 logging.info("Got the access_key for %s " % user_name)
             except Exception, e:
-                logging.info("There was an error getting the access_key for %s: %s" % (user_name, e))
+                logging.info("There was an error getting the access_key for %s: %s" %
+                             (user_name, e))
                 sys.exit("There was an error getting the access_key for %s: %s" % (user_name, e))
 
             try:
                 access_key_id = access_key.access_key_id
                 logging.info("Got the access_key_id for %s " % user_name)
             except Exception, e:
-                logging.info("There was an error getting the access_key_id for %s: %s" % (user_name, e))
+                logging.info("There was an error getting the access_key_id for %s: %s" %
+                             (user_name, e))
                 sys.exit("There was an error getting the access_key_id for %s: %s" % (user_name, e))
 
             try:
                 secret_access_key = access_key.secret_access_key
                 logging.info("Got the secret_access_key for %s " % user_name)
             except Exception, e:
-                logging.info("There was an error getting the secret_access_key for %s: %s" % (user_name, e))
-                sys.exit("There was an error getting the secret_access_key for %s: %s" % (user_name, e))
+                logging.info("There was an error getting the secret_access_key for %s: %s" %
+                             (user_name, e))
+                sys.exit("There was an error getting the secret_access_key for %s: %s" %
+                         (user_name, e))
 
             print "Username: %s Password: %s" % (user_name, password)
             print "Access key: %s Secret: %s" % (access_key_id, secret_access_key)
@@ -175,29 +189,39 @@ if __name__ == "__main__":
             if not os.path.exists("%s%s/" % (output_path, user_name)):
                 os.makedirs("%s/%s/" % (output_path, user_name))
 
-            console_text_file = "%s%s/%s_aws_console_password.txt" % (output_path, user_name, user_name)
-            credentials_text_file = "%s%s/%s_aws_credentials.csv" % (output_path, user_name, user_name)
+            console_text_file = "%s%s/%s_aws_console_password.txt" % (output_path,
+                                                                      user_name, user_name)
+            credentials_text_file = "%s%s/%s_aws_credentials.csv" % (output_path,
+                                                                     user_name, user_name)
 
             try:
                 console_text = open(console_text_file, "w")
-                console_text.write("AWS Console URL: https://mas-dse.signin.aws.amazon.com/console\n\n"
+                console_text.write("AWS Console URL: "
+                                   "https://mas-dse.signin.aws.amazon.com/console\n\n"
                                    "Username: %s\n"
                                    "Password: %s\n" % (user_name, password))
                 console_text.close()
-                logging.info("Wrote the console password file for %s: %s" % (user_name, console_text_file))
+                logging.info("Wrote the console password file for %s: %s" % (user_name,
+                                                                             console_text_file))
             except Exception, e:
-                logging.info("There was an error writing the console password file %s: %s" % (console_text_file, e))
-                sys.exit("There was an error writing the console password file %s: %s" % (console_text_file, e))
+                logging.info("There was an error writing the console password file %s: %s" %
+                             (console_text_file, e))
+                sys.exit("There was an error writing the console password file %s: %s" %
+                         (console_text_file, e))
 
             try:
                 credentials_text = open(credentials_text_file, "w")
                 credentials_text.write("User Name,Access Key Id,Secret Access Key\n")
-                credentials_text.write("\"%s\",%s,%s" % (user_name, access_key_id, secret_access_key))
+                credentials_text.write("\"%s\",%s,%s" % (user_name, access_key_id,
+                                                         secret_access_key))
                 credentials_text.close()
-                logging.info("Wrote the credentials file for %s: %s" % (user_name, credentials_text_file))
+                logging.info("Wrote the credentials file for %s: %s" % (user_name,
+                                                                        credentials_text_file))
             except Exception, e:
-                logging.info("There was an error writing the credentials file %s: %s" % (credentials_text_file, e))
-                sys.exit("There was an error writing the credentials file %s: %s" % (credentials_text_file, e))
+                logging.info("There was an error writing the credentials file %s: %s" %
+                             (credentials_text_file, e))
+                sys.exit("There was an error writing the credentials file %s: %s" %
+                         (credentials_text_file, e))
 
             # Create an s3 bucket for the user
             if args['s3'] is True:
