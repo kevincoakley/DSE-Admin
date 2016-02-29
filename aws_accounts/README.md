@@ -4,8 +4,7 @@ AWS_ACCOUNTS
 
 ## Setup
 
-1. Install https://github.com/mas-dse/UCSD_BigData_Scripts: `$ pip install git+https://github.com/mas-dse/UCSD_BigData_Scripts.git`
-2. Setup admin credentials: `$ ucsd-bigdata-setup.py -o admin`
+1. Setup admin credentials: `$ admin_setup/admin_setup.py -o admin`
 
 
 ## Adding Users and Groups

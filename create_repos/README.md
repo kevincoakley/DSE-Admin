@@ -5,7 +5,6 @@ CREATE_REPOS
 ## Setup
 
 1. Install github3: `$ pip install --pre github3.py`
-2. Install https://github.com/mas-dse/UCSD_BigData_Scripts: `$ pip install git+https://github.com/mas-dse/UCSD_BigData_Scripts.git`
 
 
 ## Create GitHub Repositories for Students
