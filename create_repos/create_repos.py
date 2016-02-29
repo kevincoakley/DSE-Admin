@@ -7,7 +7,10 @@ import argparse
 from getpass import getpass, getuser
 import sys
 import logging
-from ucsd_bigdata.vault import Vault
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
+
+from admin_setup.vault import Vault
 
 organization_name = "mas-dse"
 course_directories = ["DSE200", "DSE210", "DSE201", "DSE220", "DSE230", "DSE203"]

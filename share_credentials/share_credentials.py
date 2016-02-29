@@ -12,7 +12,10 @@ from oauth2client import tools
 import apiclient.http
 import argparse
 import logging
-from ucsd_bigdata.vault import Vault
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
+
+from admin_setup.vault import Vault
 
 SCOPES = 'https://www.googleapis.com/auth/drive'
 
