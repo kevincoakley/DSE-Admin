@@ -3,7 +3,7 @@
 import os
 import sys
 import json
-from admin_setup.vault import Vault
+from vault import Vault
 
 
 class Credentials:
