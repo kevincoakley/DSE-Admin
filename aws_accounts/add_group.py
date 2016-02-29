@@ -1,20 +1,25 @@
 #!/usr/bin/env python
 
 import os
+import os.path
 from os.path import basename
 from os.path import splitext
 import sys
 import argparse
 import logging
 import boto
-from ucsd_bigdata.vault import Vault
-from ucsd_bigdata.credentials import Credentials
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
+
+from admin_setup.vault import Vault
+from admin_setup.credentials import Credentials
 
 
 if __name__ == "__main__":
     # parse parameters
     parser = argparse.ArgumentParser(description="Create an IAM group from a policy JSON file",
-                                     epilog="Example: ./add_group.py -n 2014_students_EC2 -p group_policies/ec2.json")
+                                     epilog="Example: ./add_group.py -n 2014_students_EC2 -p "
+                                            "group_policies/ec2.json")
     parser.add_argument("-n",
                         metavar="IAM_group_name",
                         dest="iam_group_name",
@@ -36,7 +41,8 @@ if __name__ == "__main__":
         os.makedirs(vault.path + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=vault.path + "/logs/add_group.log", format='%(asctime)s %(message)s',
+    logging.basicConfig(filename=vault.path + "/logs/add_group.log",
+                        format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("add_group.py started")
@@ -75,11 +81,15 @@ if __name__ == "__main__":
         sys.exit("There was an error adding the group %s:\n %s" % (args['iam_group_name'], e))
 
     try:
-        iam.put_group_policy(args['iam_group_name'], splitext(basename(args['policy_file']))[0], policy)
-        logging.info("Policy %s added to IAM group %s" % (args['policy_file'], args['iam_group_name']))
+        iam.put_group_policy(args['iam_group_name'], splitext(basename(args['policy_file']))[0],
+                             policy)
+        logging.info("Policy %s added to IAM group %s" % (args['policy_file'],
+                                                          args['iam_group_name']))
         print "Policy %s added to IAM group %s" % (args['policy_file'], args['iam_group_name'])
     except Exception, e:
-        logging.info("There was an error adding the policy to group %s:\n %s" % (args['iam_group_name'], e))
-        sys.exit("There was an error adding the policy to group %s:\n %s" % (args['iam_group_name'], e))
+        logging.info("There was an error adding the policy to group %s:\n %s" %
+                     (args['iam_group_name'], e))
+        sys.exit("There was an error adding the policy to group %s:\n %s" %
+                 (args['iam_group_name'], e))
 
     logging.info("add_group.py finished")
