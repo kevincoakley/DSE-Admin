@@ -22,7 +22,7 @@ class Credentials:
 
         Credentials.get(self)
 
-    def get(self, json_object_name="student"):
+    def get(self, json_object_name="admin"):
         if os.path.isfile(self.credentials_json_file):
             try:
                 with open(self.credentials_json_file, 'r') as f:
