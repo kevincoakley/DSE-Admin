@@ -53,3 +53,20 @@ The user credentials are saved in two files:
 * **username_aws_credentials.csv**: Contains the user's AWS Access Key Id and Secret Access Key. 
 
 Example usage: `$ add_users.py -c csv_file -o ~/Vault/users/`
+
+
+## del_users.py - Delete IAM Users
+
+Removes users from IAM that don't exist in the CSV file but do exist in an IAM group.
+
+Example CSV file what would delete user4:
+
+```
+user1,group1,group2,group3
+user2,group1,group2,group3
+user3,group1,group2,group3
+user5,group1,
+user6
+```
+
+Example usage:  `$ del_users.py -c csv_file -g 2014_students_EC2`
