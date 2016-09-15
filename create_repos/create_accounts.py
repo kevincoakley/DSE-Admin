@@ -1,16 +1,14 @@
 #!/usr/bin/env python
 
-import os
+import argparse
 import csv
 import github3
-import argparse
 from getpass import getpass, getuser
-import sys
 import logging
+import mechanize
+import sys
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
-
-from admin_setup.vault import Vault
+github_create_account_url = "https://github.com/join"
 
 organization_name = "mas-dse"
 course_directories = ["DSE200", "DSE210", "DSE201", "DSE220", "DSE230", "DSE203"]
@@ -32,7 +30,37 @@ def github_login():
     return github3.login(user, password)
 
 
-def create_team(organization, team_name):
+def create_github_account(login, email, password):
+    # Create a Mechanized Browser
+    br = mechanize.Browser()
+
+    # Browser options
+    br.set_handle_equiv(True)
+    br.set_handle_redirect(True)
+    br.set_handle_referer(True)
+    br.set_handle_robots(False)
+
+    # Follows refresh 0 but not hangs on refresh > 0
+    br.set_handle_refresh(mechanize._http.HTTPRefreshProcessor(), max_time=1)
+
+    br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) '
+                                    'Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
+
+    # Open some site, let's pick a random one, the first that pops in mind:
+    br.open(github_create_account_url)
+
+    # Select the 3rd form
+    br.select_form(nr=2)
+
+    # Complete the create account form
+    br.form['user[login]'] = login
+    br.form['user[email]'] = email
+    br.form['user[password]'] = password
+
+    br.submit()
+
+
+def get_create_team(organization, team_name):
     team = None
 
     while team is None:
@@ -62,23 +90,23 @@ def invite_member_to_team(team, member_name):
         logging.info("Member %s is already in team \"%s\"" % (member_name, team.name))
 
 
-def create_repository(organization, ucsd_username, year):
+def create_repository(organization, username, year):
     repository = None
 
     while repository is None:
         for r in organization.repositories(type="private"):
-            if str(r) == "%s/%s" % (organization_name, ucsd_username):
-                print "Repository %s/%s already exists" % (organization_name, ucsd_username)
-                logging.info("Repository %s/%s already exists" % (organization_name, ucsd_username))
+            if str(r) == "%s/%s" % (organization_name, username):
+                print "Repository %s/%s already exists" % (organization_name, username)
+                logging.info("Repository %s/%s already exists" % (organization_name, username))
                 repository = r
 
         if repository is None:
-            logging.info("Creating new repository: %s/%s" % (organization_name, ucsd_username))
-            repository = organization.create_repository(ucsd_username, "DSE %s" % year,
+            logging.info("Creating new repository: %s/%s" % (organization_name, username))
+            repository = organization.create_repository(username, "DSE %s" % year,
                                                         private=True,
                                                         auto_init=True)
-            print "Repository %s/%s created" % (organization_name, ucsd_username)
-            logging.info("Repository %s/%s created" % (organization_name, ucsd_username))
+            print "Repository %s/%s created" % (organization_name, username)
+            logging.info("Repository %s/%s created" % (organization_name, username))
 
             logging.info("Updating README.md")
             readme = repository.readme()
@@ -87,7 +115,7 @@ def create_repository(organization, ucsd_username, year):
                           "A directory has been created for each course.\n\n"
                           "See [https://mas-dse.github.io/startup/]"
                           "(https://mas-dse.github.io/startup/) for startup instructions." %
-                          ucsd_username)
+                          username)
             logging.info("README.md Updated")
 
     return repository
@@ -109,6 +137,17 @@ def create_repository_folders(repo):
             logging.info("The %s directory already exists in the repository" % course_directory)
 
 
+def add_member_as_collaborator(repo, username):
+    if repo.is_collaborator(username):
+        print "User \"%s\" is already a collaborator of %s" % (username, repo.name)
+        logging.info("User \"%s\" is already a collaborator of  %s" % (username, repo.name))
+    else:
+        logging.info("Adding \"%s\" as a collaborator of \"%s\"" % (username, repo.name))
+        repo.add_collaborator(username)
+        print "User \"%s\" added as a collaborator of %s" % (username, repo.name)
+        logging.info("User \"%s\" added as a collaborator of %s" % (username, repo.name))
+
+
 def add_repository_to_team(team, repo):
     if team.has_repository(repo):
         print "Team \"%s\" already has access to %s" % (team.name, repo)
@@ -122,9 +161,9 @@ def add_repository_to_team(team, repo):
 
 if __name__ == '__main__':
     # parse parameters
-    parser = argparse.ArgumentParser(description="Create teams and private GitHub repositories "
-                                                 "for Students",
-                                     epilog="Example: ./create_repos.py -y 2014 -c csv_file")
+    parser = argparse.ArgumentParser(description="Create GitHub accounts for Students",
+                                     epilog="Example: ./create_accounts.py -c csv_file")
+
     parser.add_argument("-y",
                         metavar="class_year",
                         dest="class_year",
@@ -147,42 +186,14 @@ if __name__ == '__main__':
 
     args = vars(parser.parse_args())
 
-    # Get the vault from ~/.vault or default to ~/Vault
-    vault = Vault()
+    log_level = logging.INFO
 
-    # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(vault.path + "/logs"):
-        os.makedirs(vault.path + "/logs")
+    logging.basicConfig(level=log_level,
+                        format='%(asctime)s %(levelname)s %(filename)s:%(lineno)d %(message)s',
+                        handlers=[logging.StreamHandler()])
 
-    # Save a log to vault/logs/create_repos.log
-    logging.basicConfig(filename=vault.path + "/logs/create_repos.log",
-                        format='%(asctime)s %(message)s',
-                        level=logging.INFO)
-
-    logging.info("create_repos.py started")
+    logging.info("create_accounts.py started")
     logging.info("CSV File: %s" % args['csv_file'])
-    logging.info("Class Year: %s" % args['class_year'])
-
-    # If the user specified a GitHub personal access token then skip asking for a username and
-    # password to allow admins with two factor authentication enabled to run the script.
-    if args["github_token"] is None:
-        github = github_login()
-    else:
-        github = github3.login(token=args["github_token"])
-
-    try:
-        class_organization = github.organization(organization_name)
-    except github3.exceptions.AuthenticationFailed:
-        sys.exit("Invalid username or password")
-
-    # Verify the organization was found
-    if len(str(class_organization.name)) > 0:
-        print "Found organization: %s" % class_organization.name
-        logging.info("Found organization: %s" % class_organization.name)
-    else:
-        print "Organization %s not found" % organization_name
-        logging.info("Organization %s not found" % organization_name)
-        sys.exit()
 
     # Read CSV File into a list
     try:
@@ -193,26 +204,52 @@ if __name__ == '__main__':
         logging.info("There was an error reading the CSV file %s: %s" % (args['csv_file'], e))
         sys.exit("There was an error reading the CSV file %s: %s" % (args['csv_file'], e))
 
+    # If the user specified a GitHub personal access token then skip asking for a username and
+    # password to allow admins with two factor authentication enabled to run the script.
+    if args["github_token"] is None:
+        github = github_login()
+    else:
+        github = github3.login(token=args["github_token"])
+
+    try:
+        # Get the class Organization object
+        class_organization = github.organization(organization_name)
+    except github3.exceptions.AuthenticationFailed:
+        sys.exit("Invalid username or password")
+
     # If the class team does not exist then create it
-    class_team = create_team(class_organization, "%s Students" % args["class_year"])
+    class_team = get_create_team(class_organization, "%s Students" % args["class_year"])
 
     # Process the student accounts
     for user_row in csv_users_list:
-        # Add the student to the class team
-        invite_member_to_team(class_team, user_row[1])
 
-        # If the student team does not exist then create it
-        student_team = create_team(class_organization, "%s %s" % (args["class_year"], user_row[0]))
-        # Add the student to their student team
-        invite_member_to_team(student_team, user_row[1])
+        email_username = user_row[0].split("@")[0]
+        github_username = "%s-%s" % (organization_name, email_username)
+        github_email = user_row[0]
+        github_password = user_row[1]
+
+        logging.info("%s,%s,%s,%s" % (email_username, github_username, github_email,
+                                      github_password))
+
+        # Create a Github Account
+        create_github_account(github_username, github_email, github_password)
+
+        # Add the student to the class team
+        invite_member_to_team(class_team, github_username)
 
         # If the student repository doesn't exist then create it
-        student_repo = create_repository(class_organization, user_row[0], args["class_year"])
+        student_repo = create_repository(class_organization, email_username, args["class_year"])
 
         # Create a directory for each DSE course using the course_directories list
         create_repository_folders(student_repo)
 
-        # Add the student repository to the student team
-        add_repository_to_team(student_team, student_repo)
+        # Add the student as a collaborator
+        add_member_as_collaborator(student_repo, github_username)
 
-    logging.info("create_repos.py finished")
+        # Get the Instructors Team object
+        instructors_team = get_create_team(class_organization, "Instructors")
+
+        # Add the student repository to the instructor team
+        add_repository_to_team(instructors_team, student_repo)
+
+    logging.info("create_accounts.py finished")
