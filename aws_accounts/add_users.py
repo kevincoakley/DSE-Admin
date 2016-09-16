@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import os.path
 import sys
 import boto
@@ -8,11 +7,6 @@ import random
 import argparse
 import logging
 import csv
-
-sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
-
-from admin_setup.vault import Vault
-from admin_setup.credentials import Credentials
 
 
 def random_password_generator():
@@ -37,53 +31,53 @@ def random_password_generator():
 if __name__ == "__main__":
 
     # parse parameters
-    parser = argparse.ArgumentParser(description="Create IAM users from a CSV file",
-                                     epilog="Example: ./add_users.py -c csv_file -o ~/Vault/users/")
+    parser = argparse.ArgumentParser(description="Create IAM users from a CSV file")
+
+    parser.add_argument("-k",
+                        metavar="aws_access_key_id",
+                        dest="aws_access_key_id",
+                        help="AWS Access Key ID",
+                        required=True)
+    parser.add_argument("-s",
+                        metavar="aws_secret_access_key",
+                        dest="aws_secret_access_key",
+                        help="AWS Secret Access Key",
+                        required=True)
     parser.add_argument("-c",
                         metavar="csv_file",
                         dest="csv_file",
                         help="Location of the user CSV file",
                         required=True)
-
     parser.add_argument("-o",
+                        dest="output_path",
                         metavar="output_path",
-                        dest="output",
-                        help="Path to save credential files. "
-                             "The default is the users directory in the vault directory.")
-
+                        help="Path to where the output will be saved",
+                        required=True)
     parser.add_argument("-s3",
                         dest="s3",
                         help="Create a S3 bucket for the user. Default is True.",
                         choices=['True', 'False'],
-                        default=True)
+                        default=False)
 
     args = vars(parser.parse_args())
 
-    # Get the vault from ~/.vault or default to ~/Vault
-    vault = Vault()
-
     # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(vault.path + "/logs"):
-        os.makedirs(vault.path + "/logs")
+    if not os.path.exists(args['output_path'] + "/logs"):
+        os.makedirs(args['output_path'] + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=vault.path + "/logs/add_students.log",
+    logging.basicConfig(filename=args['output_path'] + "/logs/add_students.log",
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("add_users.py started")
     logging.info("CSV File: %s" % args['csv_file'])
-    logging.info("Output Path: %s" % args['output'])
-    logging.info("Vault: %s" % vault.path)
-
-    # Get the AWS credentials from the User's Vault
-    credentials = Credentials()
-    credentials.get(json_object_name="admin")
+    logging.info("Output Path: %s" % args['output_path'])
 
     # Open IAM connection to aws
     try:
-        iam = boto.connect_iam(aws_access_key_id=credentials.aws_access_key_id,
-                               aws_secret_access_key=credentials.aws_secret_access_key)
+        iam = boto.connect_iam(aws_access_key_id=args['aws_access_key_id'],
+                               aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created IAM Connection = %s" % iam)
         print "Created IAM Connection = %s" % iam
     except Exception, e:
@@ -92,8 +86,8 @@ if __name__ == "__main__":
 
     # Open S3 connection to aws
     try:
-        s3 = boto.connect_s3(aws_access_key_id=credentials.aws_access_key_id,
-                             aws_secret_access_key=credentials.aws_secret_access_key)
+        s3 = boto.connect_s3(aws_access_key_id=args['aws_access_key_id'],
+                             aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created S3 Connection = %s" % s3)
         print "Created S3 Connection = %s" % s3
     except Exception, e:
@@ -172,10 +166,10 @@ if __name__ == "__main__":
             print "Access key: %s Secret: %s" % (access_key_id, secret_access_key)
 
             # Get the path the save the credentials
-            if (args['output'] is None) or (len(args['output']) == 0):
-                output_path = "%s/users/" % vault.path
+            if (args['output_path'] is None) or (len(args['output_path']) == 0):
+                output_path = "%s/users/" % args['output_path']
             else:
-                output_path = args['output']
+                output_path = args['output_path']
 
             # Make sure the output_path ends with /
             if not output_path.endswith("/"):

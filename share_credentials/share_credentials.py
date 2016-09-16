@@ -13,10 +13,6 @@ import apiclient.http
 import argparse
 import logging
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
-
-from admin_setup.vault import Vault
-
 SCOPES = 'https://www.googleapis.com/auth/drive'
 
 APPLICATION_NAME = 'DSE-Admin'
@@ -122,20 +118,13 @@ def share(directory_id, google_username):
 
 if __name__ == '__main__':
     # parse parameters
-    parser = argparse.ArgumentParser(description="Share files with students using Google Drive",
-                                     epilog="Example: ./share_credentials.py -r DSE_2015")
-    parser.add_argument("-l",
-                        metavar="local_directory",
-                        dest="local_directory",
-                        help="Directory on local computer",
-                        default=None,
-                        required=False)
+    parser = argparse.ArgumentParser(description="Share files with students using Google Drive")
+
     parser.add_argument("-r",
                         dest="remote_directory",
                         metavar="remote_directory",
                         help="Name of folder on Google Drive",
                         required=True)
-
     parser.add_argument("-e",
                         dest="send_email",
                         action="store_true",
@@ -147,37 +136,39 @@ if __name__ == '__main__':
                         help="Message to be included with the email sent from Google ",
                         default=None,
                         required=False)
+    parser.add_argument("-o",
+                        dest="output_path",
+                        metavar="output_path",
+                        help="Path to where the output will be saved",
+                        required=True)
 
     args = vars(parser.parse_args())
 
-    # Get the vault from ~/.vault or default to ~/Vault
-    vault = Vault()
-
     # If local_directory isn't specified, use vault/users/
-    local_directory = "%s/users/" % vault.path
+    local_directory = "%s/users/" % args['output_path']
     if args['local_directory'] is not None:
         local_directory = args['local_directory']
 
     # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(vault.path + "/logs"):
-        os.makedirs(vault.path + "/logs")
+    if not os.path.exists(args['output_path'] + "/logs"):
+        os.makedirs(args['output_path'] + "/logs")
 
     # Save a log to vault/logs/share_credentials.py.log
-    logging.basicConfig(filename=vault.path + "/logs/share_credentials.log",
+    logging.basicConfig(filename=args['output_path'] + "/logs/share_credentials.log",
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("share_credentials.py started")
     logging.info("Local Directory: %s" % local_directory)
     logging.info("Remote Directory: %s" % args["remote_directory"])
-    logging.info("Vault: %s" % vault.path)
+    logging.info("Vault: %s" % args['output_path'])
 
     if not os.path.exists(local_directory):
         logging.info("Local Directory (%s) does not exist." % local_directory)
         sys.exit("Local Directory (%s) does not exist." % local_directory)
 
     # Authenticate to Google Drive
-    google_drive_credentials = get_credentials("%s/client_secret.json" % vault.path)
+    google_drive_credentials = get_credentials("%s/client_secret.json" % args['output_path'])
     http = google_drive_credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v2', http=http)
 

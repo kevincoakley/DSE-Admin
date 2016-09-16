@@ -2,19 +2,14 @@ AWS_ACCOUNTS
 ============
 
 
-## Setup
-
-1. Setup admin credentials: `$ admin_setup/admin_setup.py -o admin`
-
-
 ## Adding Users and Groups
 
 1. Add Groups. I recommend creating groups with names based on the year or course in order to make account clean up easier.
-    1. Add IAM group for EC2: `$ add_group.py -n 2014_students_EC2 -p accounts/group_policies/ec2.json"`
-    2. Add IAM group for EMR: `$ add_group.py -n 2014_students_EMR -p accounts/group_policies/emr.json"`
-    3. Add IAM group for S3: `$ add_group.py -n 2014_students_S3 -p accounts/group_policies/s3.json"`
+    1. Add IAM group for EC2: `$ add_group.py -k XXX -s XXX -n 2014_students_EC2 -p accounts/group_policies/ec2.json -o ~/save/"`
+    2. Add IAM group for EMR: `$ add_group.py -k XXX -s XXX -n 2014_students_EMR -p accounts/group_policies/emr.json -o ~/save/"`
+    3. Add IAM group for S3: `$ add_group.py -k XXX -s XXX -n 2014_students_S3 -p accounts/group_policies/s3.json -o ~/save/"`
 2. Create the users CSV file, see below and example_users.csv for an example CSV file.
-3. Add users from CSV file: `$ add_users.py -c ~/Desktop/dse_users.csv`
+3. Add users from CSV file: `$ add_users.py -k XXX -s XXX -c ~/Desktop/dse_users.csv -o ~/save/`
 4. Use share_credentials to distribute *username_aws_console_password.txt* & *username_aws_credentials.csv*.
 
 
@@ -29,7 +24,7 @@ Included policies:
 
 *${aws:username}* equals the IAM username.
 
-Example usage: `$ add_group.py -n 2014_students_EC2 -p group_policies/ec2.json"`
+Example usage: `$ add_group.py  -k XXX -s XXX -n 2014_students_EC2 -p group_policies/ec2.json -o ~/save/"`
 
 
 ## add_users.py - Add IAM Users
@@ -52,7 +47,7 @@ The user credentials are saved in two files:
 * **username_aws_console_password.txt**: Contains the user's AWS console username and password.
 * **username_aws_credentials.csv**: Contains the user's AWS Access Key Id and Secret Access Key. 
 
-Example usage: `$ add_users.py -c csv_file -o ~/Vault/users/`
+Example usage: `$ add_users.py  -k XXX -s XXX -c csv_file  -o ~/save/`
 
 
 ## del_users.py - Delete IAM Users
@@ -69,4 +64,4 @@ user5,group1,
 user6
 ```
 
-Example usage:  `$ del_users.py -c csv_file -g 2014_students_EC2`
+Example usage:  `$ del_users.py  -k XXX -s XXX -c csv_file -g 2014_students_EC2 -o ~/save/`

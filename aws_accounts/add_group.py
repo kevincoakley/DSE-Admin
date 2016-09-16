@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import os
 import os.path
 from os.path import basename
 from os.path import splitext
@@ -9,17 +8,21 @@ import argparse
 import logging
 import boto
 
-sys.path.insert(0, os.path.dirname(os.path.abspath(os.path.realpath(__file__))) + "/../")
-
-from admin_setup.vault import Vault
-from admin_setup.credentials import Credentials
-
 
 if __name__ == "__main__":
     # parse parameters
-    parser = argparse.ArgumentParser(description="Create an IAM group from a policy JSON file",
-                                     epilog="Example: ./add_group.py -n 2014_students_EC2 -p "
-                                            "group_policies/ec2.json")
+    parser = argparse.ArgumentParser(description="Create an IAM group from a policy JSON file")
+
+    parser.add_argument("-k",
+                        metavar="aws_access_key_id",
+                        dest="aws_access_key_id",
+                        help="AWS Access Key ID",
+                        required=True)
+    parser.add_argument("-s",
+                        metavar="aws_secret_access_key",
+                        dest="aws_secret_access_key",
+                        help="AWS Secret Access Key",
+                        required=True)
     parser.add_argument("-n",
                         metavar="IAM_group_name",
                         dest="iam_group_name",
@@ -30,34 +33,32 @@ if __name__ == "__main__":
                         metavar="policy.json",
                         help="Location of the policy JSON file",
                         required=True)
+    parser.add_argument("-o",
+                        dest="output_path",
+                        metavar="output_path",
+                        help="Path to where the output will be saved",
+                        required=True)
 
     args = vars(parser.parse_args())
 
-    # Get the vault from ~/.vault or default to ~/Vault
-    vault = Vault()
-
     # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(vault.path + "/logs"):
-        os.makedirs(vault.path + "/logs")
+    if not os.path.exists(args['output_path'] + "/logs"):
+        os.makedirs(args['output_path'] + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=vault.path + "/logs/add_group.log",
+    logging.basicConfig(filename=args['output_path'] + "/logs/add_group.log",
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("add_group.py started")
     logging.info("IAM Group Name: %s" % args['iam_group_name'])
     logging.info("Policy File: %s" % args['policy_file'])
-    logging.info("Vault: %s" % vault.path)
-
-    # Get the AWS credentials from the User's Vault
-    credentials = Credentials()
-    credentials.get(json_object_name="admin")
+    logging.info("Output Path: %s" % args['output_path'])
 
     # Open connection to aws
     try:
-        iam = boto.connect_iam(aws_access_key_id=credentials.aws_access_key_id,
-                               aws_secret_access_key=credentials.aws_secret_access_key)
+        iam = boto.connect_iam(aws_access_key_id=args['aws_access_key_id'],
+                               aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created Connection = %s" % iam)
         print "Created Connection = %s" % iam
     except Exception, e:
