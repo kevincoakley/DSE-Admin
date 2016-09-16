@@ -15,13 +15,42 @@
                 "s3:GetBucketTagging",
                 "s3:GetBucketVersioning",
                 "s3:GetBucketWebsite",
-                "s3:GetObject",
                 "s3:GetLifecycleConfiguration",
                 "s3:ListAllMyBuckets",
                 "s3:ListBucket"
             ],
             "Resource": [
                 "arn:aws:s3:::*"
+            ]
+        },
+        {
+            "Sid": "Stmt1427310301000",
+            "Effect": "Allow",
+            "Action": [
+                "s3:*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::dse-${aws:username}/*"
+            ]
+        },
+        {
+            "Sid": "Stmt1431728110000",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::mas-dse-emr/*"
+            ]
+        },
+        {
+            "Sid": "Stmt1431728110001",
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::dse-iri-dataset/*"
             ]
         }
     ]
