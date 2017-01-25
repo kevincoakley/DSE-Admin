@@ -6,10 +6,10 @@ import sys
 import csv
 import time
 from apiclient import discovery
-import oauth2client
 from oauth2client import client
 from oauth2client import tools
-import apiclient.http
+from oauth2client.file import Storage
+import apiclient
 import argparse
 import logging
 
@@ -32,9 +32,9 @@ def get_credentials(client_secret_file="client_secret.json"):
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
     credential_path = os.path.join(credential_dir,
-                                   'drive-quickstart.json')
+                                   'drive-python-quickstart.json')
 
-    store = oauth2client.file.Storage(credential_path)
+    store = Storage(credential_path)
     credentials = store.get()
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(client_secret_file, SCOPES)
