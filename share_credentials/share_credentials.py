@@ -129,46 +129,42 @@ if __name__ == '__main__':
                         dest="send_email",
                         action="store_true",
                         help="Have Google email student about the shared directory")
-
     parser.add_argument("-m",
                         metavar="email_message",
                         dest="email_message",
                         help="Message to be included with the email sent from Google ",
                         default=None,
                         required=False)
-    parser.add_argument("-o",
-                        dest="output_path",
-                        metavar="output_path",
-                        help="Path to where the output will be saved",
+    parser.add_argument("-s",
+                        dest="share_path",
+                        metavar="share_path",
+                        help="Path to where the files to be shared are saved",
                         required=True)
 
     args = vars(parser.parse_args())
 
-    # If local_directory isn't specified, use vault/users/
-    local_directory = "%s/users/" % args['output_path']
-    if args['local_directory'] is not None:
-        local_directory = args['local_directory']
+    # If share_path isn't specified, use share_path/users/
+    share_path = "%s/users/" % args['share_path']
 
-    # Create a logs directory in the vault directory if one does not exist
-    if not os.path.exists(args['output_path'] + "/logs"):
-        os.makedirs(args['output_path'] + "/logs")
+    # Create a logs directory in the share_path directory if one does not exist
+    if not os.path.exists(args['share_path'] + "/logs"):
+        os.makedirs(args['share_path'] + "/logs")
 
-    # Save a log to vault/logs/share_credentials.py.log
-    logging.basicConfig(filename=args['output_path'] + "/logs/share_credentials.log",
+    # Save a log to share_path/logs/share_credentials.py.log
+    logging.basicConfig(filename=args['share_path'] + "/logs/share_credentials.log",
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
     logging.info("share_credentials.py started")
-    logging.info("Local Directory: %s" % local_directory)
+    logging.info("Share Directory: %s" % share_path)
     logging.info("Remote Directory: %s" % args["remote_directory"])
-    logging.info("Vault: %s" % args['output_path'])
 
-    if not os.path.exists(local_directory):
-        logging.info("Local Directory (%s) does not exist." % local_directory)
-        sys.exit("Local Directory (%s) does not exist." % local_directory)
+    if not os.path.exists(share_path):
+        logging.info("Local Directory (%s) does not exist." % share_path)
+        sys.exit("Local Directory (%s) does not exist." % share_path)
 
     # Authenticate to Google Drive
-    google_drive_credentials = get_credentials("%s/client_secret.json" % args['output_path'])
+    google_drive_credentials = get_credentials("%s/client_secret.json" % args['share_path'])
     http = google_drive_credentials.authorize(httplib2.Http())
     service = discovery.build('drive', 'v2', http=http)
 
@@ -178,11 +174,11 @@ if __name__ == '__main__':
     path_ids["/"] = create_directory(args["remote_directory"])
 
     # Save the share urls to a csv file
-    csv_file = csv.writer(open("%s/share_urls_%s.csv" % (local_directory,
+    csv_file = csv.writer(open("%s/share_urls_%s.csv" % (share_path,
                                                          time.strftime("%Y%m%d%H%M%S")),  "ab+"))
 
-    for path, dirs, files in os.walk(local_directory):
-        relative_path = path.replace(local_directory, "/")
+    for path, dirs, files in os.walk(share_path):
+        relative_path = path.replace(share_path, "/")
 
         if relative_path == "/":
             continue
