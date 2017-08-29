@@ -4,6 +4,7 @@ CREATE_ACCOUNTS
 
 ## Setup
 
+1. Only works on Python 2.7
 1. Install mechanize: `$ pip install mechanize`
 1. Install github3: `$ pip install --pre github3.py`
 
