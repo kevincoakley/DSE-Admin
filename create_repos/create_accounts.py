@@ -160,6 +160,10 @@ def add_repository_to_team(team, repo):
 
 
 if __name__ == '__main__':
+    # Set the default encoding to utf8 due to issues with mechanize and urllib using str()
+    reload(sys)
+    sys.setdefaultencoding('utf8')
+
     # parse parameters
     parser = argparse.ArgumentParser(description="Create GitHub accounts for Students",
                                      epilog="Example: ./create_accounts.py -c csv_file")
