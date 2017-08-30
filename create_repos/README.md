@@ -12,6 +12,7 @@ CREATE_ACCOUNTS
 ## Create GitHub Repositories for Students
 
 1. Create an CSV file with a row for each student's UCSD username and GitHub password.
+2. Passwords must have at least one letter, one numeral, and seven characters.
 3. Run the create_accounts script and include the path to the csv file and the Academic Year: `$ create_accounts.py -c csv_file.csv -y 2015`
 
 Example CSV file:
