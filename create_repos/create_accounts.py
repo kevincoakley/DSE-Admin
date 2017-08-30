@@ -46,11 +46,11 @@ def create_github_account(login, email, password):
     br.addheaders = [('User-agent', 'Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.0.1) '
                                     'Gecko/2008071615 Fedora/3.0.1-1.fc9 Firefox/3.0.1')]
 
-    # Open some site, let's pick a random one, the first that pops in mind:
+    # Open the github join page:
     br.open(github_create_account_url)
 
-    # Select the 3rd form
-    br.select_form(nr=2)
+    # Select the 2rd form
+    br.select_form(nr=1)
 
     # Complete the create account form
     br.form['user[login]'] = login
