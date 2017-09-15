@@ -7,6 +7,8 @@ from getpass import getpass, getuser
 import logging
 import mechanize
 import sys
+import requests
+import json
 
 github_create_account_url = "https://github.com/join"
 
@@ -159,6 +161,56 @@ def add_repository_to_team(team, repo):
         logging.info("Repository %s added to team \"%s\"" % (repo, team.name))
 
 
+def accept_organization_invitation(username, password):
+    # Accept the invitation to the mas-dse organization
+    data = json.dumps({"state": "active"})
+
+    r = requests.patch("https://api.github.com/user/memberships/orgs/mas-dse",
+                       auth=(username, password),
+                       data=data)
+
+    if r.status_code == requests.codes.ok:
+        print "User %s accepted invitation to the mas-dse organization" % username
+        logging.info("User %s accepted invitation to the mas-dse organization" % username)
+    else:
+        print "User %s failed to accept invitation to the mas-dse organization: %s %s" % \
+              (username, r.status_code, r.text)
+        logging.info("User %s failed to accept invitation to the mas-dse organization: %s %s" %
+                     (username, r.status_code, r.text))
+
+
+def accept_repository_invitation(username, password):
+    # Get the list of repository invitations
+    r = requests.get("https://api.github.com/user/repository_invitations",
+                     auth=(username, password))
+
+    if r.status_code == requests.codes.ok:
+        data = r.json()
+        print "User %s got repository invitations" % username
+        logging.info("User %s got repository invitations" % username)
+
+        # Loop through all of the repository invitations and accept them all
+        for i in range(len(data)):
+            r = requests.patch(data[i]["url"], auth=(username, password))
+
+            if r.status_code == 204:
+                print "User %s accepted invitation to the %s repository" % \
+                      (username, data[i]["repository"]["name"])
+                logging.info("User %s accepted invitation to the %s repository" %
+                             (username, data[i]["repository"]["name"]))
+            else:
+                print "User %s failed to accept invitation to the %s repository: %s %s" % \
+                      (username, data[i]["repository"]["name"], r.status_code, r.text)
+                logging.info("User %s failed to accept invitation to the %s repository: %s %s" %
+                             (username, data[i]["repository"]["name"], r.status_code, r.text))
+    else:
+        print "User %s failed to get repository invitations: %s %s" % \
+              (username, r.status_code, r.text)
+        logging.info("User %s failed to get repository invitations: %s %s" %
+                     (username, r.status_code, r.text))
+        return None
+
+
 if __name__ == '__main__':
     # Set the default encoding to utf8 due to issues with mechanize and urllib using str()
     reload(sys)
@@ -255,5 +307,11 @@ if __name__ == '__main__':
 
         # Add the student repository to the instructor team
         add_repository_to_team(instructors_team, student_repo)
+
+        # Login as the student and accept Organization invitation
+        accept_organization_invitation(github_username, github_password)
+
+        # Login as the student and accept the Repository invitation
+        accept_repository_invitation(github_username, github_password)
 
     logging.info("create_accounts.py finished")
