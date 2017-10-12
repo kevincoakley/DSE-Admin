@@ -67,8 +67,8 @@ if __name__ == "__main__":
         iam = boto.connect_iam(aws_access_key_id=args['aws_access_key_id'],
                                aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created IAM Connection = %s" % iam)
-        print "Created IAM Connection = %s" % iam
-    except Exception, e:
+        print("Created IAM Connection = %s" % iam)
+    except Exception as e:
         logging.info("There was an error connecting to AWS IAM: %s" % e)
         sys.exit("There was an error connecting to AWS IAM: %s" % e)
 
@@ -77,8 +77,8 @@ if __name__ == "__main__":
         s3 = boto.connect_s3(aws_access_key_id=args['aws_access_key_id'],
                              aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created S3 Connection = %s" % s3)
-        print "Created S3 Connection = %s" % s3
-    except Exception, e:
+        print("Created S3 Connection = %s" % s3)
+    except Exception as e:
         logging.info("There was an error connecting to AWS S3: %s" % e)
         sys.exit("There was an error connecting to AWS S3: %s" % e)
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         csv_reader = csv.reader(open(args['csv_file'], 'rU'), dialect=csv.excel_tab, delimiter=',')
         csv_users_list = list(csv_reader)
         logging.info("Contents of the CSV file %s:\n %s" % (args['csv_file'], csv_users_list))
-    except Exception, e:
+    except Exception as e:
         logging.info("There was an error reading the CSV file %s: %s" % (args['csv_file'], e))
         sys.exit("There was an error reading the CSV file %s: %s" % (args['csv_file'], e))
 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     for group_user in group_users:
 
         if group_user not in csv_users:
-            print "%s is NOT in group; Deleting user." % group_user
+            print("%s is NOT in group; Deleting user." % group_user)
 
             try:
                 # Find all of the access keys associated with the user and delete them
@@ -144,7 +144,7 @@ if __name__ == "__main__":
                 iam.delete_login_profile(group_user)
                 iam.delete_user(group_user)
                 logging.info("Deleting user %s" % group_user)
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error deleting %s: %s" % (group_user, e))
                 sys.exit("There was an error deleting %s: %s" % (group_user, e))
 
@@ -157,9 +157,9 @@ if __name__ == "__main__":
                     bucket.delete_keys(bucket.get_all_keys())
 
                     s3.delete_bucket(bucket)
-                    print "Deleted s3 bucket: %s" % s3_bucket
+                    print("Deleted s3 bucket: %s" % s3_bucket)
                     logging.info("Deleted s3 bucket: %s" % s3_bucket)
-                except Exception, e:
+                except Exception as e:
                     logging.info("There was an error deleting s3 bucket %s: %s" % (s3_bucket, e))
                     sys.exit("There was an error deleting s3 bucket %s: %s" % (s3_bucket, e))
 

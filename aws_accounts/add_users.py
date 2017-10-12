@@ -79,8 +79,8 @@ if __name__ == "__main__":
         iam = boto.connect_iam(aws_access_key_id=args['aws_access_key_id'],
                                aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created IAM Connection = %s" % iam)
-        print "Created IAM Connection = %s" % iam
-    except Exception, e:
+        print("Created IAM Connection = %s" % iam)
+    except Exception as e:
         logging.info("There was an error connecting to AWS IAM: %s" % e)
         sys.exit("There was an error connecting to AWS IAM: %s" % e)
 
@@ -89,8 +89,8 @@ if __name__ == "__main__":
         s3 = boto.connect_s3(aws_access_key_id=args['aws_access_key_id'],
                              aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created S3 Connection = %s" % s3)
-        print "Created S3 Connection = %s" % s3
-    except Exception, e:
+        print("Created S3 Connection = %s" % s3)
+    except Exception as e:
         logging.info("There was an error connecting to AWS S3: %s" % e)
         sys.exit("There was an error connecting to AWS S3: %s" % e)
 
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         csv_reader = csv.reader(open(args['csv_file'], 'rU'), dialect=csv.excel_tab, delimiter=',')
         csv_users_list = list(csv_reader)
         logging.info("Contents of the CSV file %s:\n %s" % (args['csv_file'], csv_users_list))
-    except Exception, e:
+    except Exception as e:
         logging.info("There was an error reading the CSV file %s: %s" % (args['csv_file'], e))
         sys.exit("There was an error reading the CSV file %s: %s" % (args['csv_file'], e))
 
@@ -111,14 +111,14 @@ if __name__ == "__main__":
             try:
                 user = iam.create_user(user_name)
                 logging.info("Added user %s" % user_name)
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error adding %s: %s" % (user_name, e))
                 sys.exit("There was an error adding %s: %s" % (user_name, e))
 
             try:
                 iam.create_login_profile(user_name, password)
                 logging.info("Added random password to user %s" % user_name)
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error adding random password (%s) to %s: %s" %
                              (password, user_name, e))
                 sys.exit("There was an error adding random password (%s) to %s: %s" %
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                     try:
                         iam.add_user_to_group(user_group, user_name)
                         logging.info("Added user %s to group %s" % (user_name, user_group))
-                    except Exception, e:
+                    except Exception as e:
                         logging.info("There was an error adding user %s to group %s: %s" %
                                      (user_name, user_group, e))
                         sys.exit("There was an error adding user %s to group %s: %s" %
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             try:
                 access_key = iam.create_access_key(user_name)
                 logging.info("Got the access_key for %s " % user_name)
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error getting the access_key for %s: %s" %
                              (user_name, e))
                 sys.exit("There was an error getting the access_key for %s: %s" % (user_name, e))
@@ -148,7 +148,7 @@ if __name__ == "__main__":
             try:
                 access_key_id = access_key.access_key_id
                 logging.info("Got the access_key_id for %s " % user_name)
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error getting the access_key_id for %s: %s" %
                              (user_name, e))
                 sys.exit("There was an error getting the access_key_id for %s: %s" % (user_name, e))
@@ -156,14 +156,14 @@ if __name__ == "__main__":
             try:
                 secret_access_key = access_key.secret_access_key
                 logging.info("Got the secret_access_key for %s " % user_name)
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error getting the secret_access_key for %s: %s" %
                              (user_name, e))
                 sys.exit("There was an error getting the secret_access_key for %s: %s" %
                          (user_name, e))
 
-            print "Username: %s Password: %s" % (user_name, password)
-            print "Access key: %s Secret: %s" % (access_key_id, secret_access_key)
+            print("Username: %s Password: %s" % (user_name, password))
+            print("Access key: %s Secret: %s" % (access_key_id, secret_access_key))
 
             # Get the path the save the credentials
             if (args['output_path'] is None) or (len(args['output_path']) == 0):
@@ -197,7 +197,7 @@ if __name__ == "__main__":
                 console_text.close()
                 logging.info("Wrote the console password file for %s: %s" % (user_name,
                                                                              console_text_file))
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error writing the console password file %s: %s" %
                              (console_text_file, e))
                 sys.exit("There was an error writing the console password file %s: %s" %
@@ -211,7 +211,7 @@ if __name__ == "__main__":
                 credentials_text.close()
                 logging.info("Wrote the credentials file for %s: %s" % (user_name,
                                                                         credentials_text_file))
-            except Exception, e:
+            except Exception as e:
                 logging.info("There was an error writing the credentials file %s: %s" %
                              (credentials_text_file, e))
                 sys.exit("There was an error writing the credentials file %s: %s" %
@@ -222,9 +222,9 @@ if __name__ == "__main__":
                 s3_bucket = "dse-%s" % user_name
                 try:
                     s3.create_bucket(s3_bucket)
-                    print "Created s3 bucket: %s" % s3_bucket
+                    print("Created s3 bucket: %s" % s3_bucket)
                     logging.info("Created s3 bucket: %s" % s3_bucket)
-                except Exception, e:
+                except Exception as e:
                     logging.info("There was an error creating s3 bucket %s: %s" % (s3_bucket, e))
                     sys.exit("There was an error creating s3 bucket %s: %s" % (s3_bucket, e))
 

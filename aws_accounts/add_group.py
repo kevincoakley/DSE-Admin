@@ -60,8 +60,8 @@ if __name__ == "__main__":
         iam = boto.connect_iam(aws_access_key_id=args['aws_access_key_id'],
                                aws_secret_access_key=args['aws_secret_access_key'])
         logging.info("Created Connection = %s" % iam)
-        print "Created Connection = %s" % iam
-    except Exception, e:
+        print("Created Connection = %s" % iam)
+    except Exception as e:
         logging.info("There was an error connecting to AWS: %s" % e)
         sys.exit("There was an error connecting to AWS: %s" % e)
 
@@ -69,15 +69,15 @@ if __name__ == "__main__":
         with open(args['policy_file'], "r") as policy_file:
             policy = policy_file.read()
             logging.info("Policy from %s:\n%s" % (args['policy_file'], policy))
-    except Exception, e:
+    except Exception as e:
         logging.info("There was an error reading the policy JSON file: %s" % e)
         sys.exit("There was an error reading the policy JSON file: %s" % e)
 
     try:
         iam.create_group(args['iam_group_name'])
         logging.info("Added IAM group %s" % args['iam_group_name'])
-        print "Added IAM group %s" % args['iam_group_name']
-    except Exception, e:
+        print("Added IAM group %s" % args['iam_group_name'])
+    except Exception as e:
         logging.info("There was an error adding the group %s:\n %s" % (args['iam_group_name'], e))
         sys.exit("There was an error adding the group %s:\n %s" % (args['iam_group_name'], e))
 
@@ -86,8 +86,8 @@ if __name__ == "__main__":
                              policy)
         logging.info("Policy %s added to IAM group %s" % (args['policy_file'],
                                                           args['iam_group_name']))
-        print "Policy %s added to IAM group %s" % (args['policy_file'], args['iam_group_name'])
-    except Exception, e:
+        print("Policy %s added to IAM group %s" % (args['policy_file'], args['iam_group_name']))
+    except Exception as e:
         logging.info("There was an error adding the policy to group %s:\n %s" %
                      (args['iam_group_name'], e))
         sys.exit("There was an error adding the policy to group %s:\n %s" %
