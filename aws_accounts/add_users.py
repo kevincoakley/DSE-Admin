@@ -55,7 +55,7 @@ if __name__ == "__main__":
                         required=True)
     parser.add_argument("-s3",
                         dest="s3",
-                        help="Create a S3 bucket for the user. Default is True.",
+                        help="Create a S3 bucket for the user. Default is False.",
                         choices=['True', 'False'],
                         default=False)
 
