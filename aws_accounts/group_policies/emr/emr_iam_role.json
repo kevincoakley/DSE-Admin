@@ -1,0 +1,18 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1430773872001",
+      "Effect": "Allow",
+      "Action": [
+        "iam:GetInstanceProfile",
+        "iam:GetRole",
+        "iam:PassRole",
+        "iam:ListInstanceProfiles"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:role/EMR_DefaultRole"
+      ]
+    }
+  ]
+}
