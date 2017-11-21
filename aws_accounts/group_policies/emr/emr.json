@@ -22,15 +22,6 @@
             "Resource": [
                 "*"
             ]
-        },
-        {
-            "Sid": "Stmt1427322785001",
-            "Effect": "Allow",
-            "Action": [
-                "iam:GetRole",
-                "iam:PassRole"
-            ],
-            "Resource": "arn:aws:iam::846273844940:role/EMR_DefaultRole"
         }
     ]
 }
