@@ -32,7 +32,7 @@
       ],
       "Resource": [
         "arn:aws:s3:::aws-logs-XXXXXXXXXXXX-us-east-1/*",
-        "arn:aws:s3:::dse-team-20XX/*"
+        "arn:aws:s3:::dse-cohort#-group#/*"
       ]
     }
   ]
