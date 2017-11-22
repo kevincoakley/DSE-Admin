@@ -48,6 +48,11 @@ if __name__ == "__main__":
                         dest="csv_file",
                         help="Location of the user CSV file",
                         required=True)
+    parser.add_argument("-u",
+                        metavar="console_url",
+                        dest="console_url",
+                        help="Console URL; example https://mas-dse.signin.aws.amazon.com/console",
+                        required=True)
     parser.add_argument("-o",
                         dest="output_path",
                         metavar="output_path",
@@ -191,9 +196,9 @@ if __name__ == "__main__":
             try:
                 console_text = open(console_text_file, "w")
                 console_text.write("AWS Console URL: "
-                                   "https://mas-dse.signin.aws.amazon.com/console\n\n"
+                                   "%s\n\n"
                                    "Username: %s\n"
-                                   "Password: %s\n" % (user_name, password))
+                                   "Password: %s\n" % (args['console_url'], user_name, password))
                 console_text.close()
                 logging.info("Wrote the console password file for %s: %s" % (user_name,
                                                                              console_text_file))
