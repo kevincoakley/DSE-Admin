@@ -40,7 +40,7 @@ def get_credentials(client_secret_file="client_secret.json"):
         flow = client.flow_from_clientsecrets(client_secret_file, SCOPES)
         flow.user_agent = APPLICATION_NAME
         credentials = tools.run(flow, store)
-        print 'Storing credentials to ' + credential_path
+        print("Storing credentials to %s" % credential_path)
     return credentials
 
 
@@ -62,7 +62,7 @@ def create_directory(name, parent_id=None):
         }
 
     directory = service.files().insert(body=body).execute()
-    print "Directory Created: %s (%s)" % (directory["title"], directory["id"])
+    print("Directory Created: %s (%s)" % (directory["title"], directory["id"]))
     logging.info("Directory Created: %s (%s)" % (directory["title"], directory["id"]))
 
     return directory["id"]
@@ -84,7 +84,7 @@ def upload_file(file_to_upload, parent_id):
 
     # Perform the request and print the result.
     uploaded_file = service.files().insert(body=body, media_body=media_body).execute()
-    print "File Uploaded: %s (%s)" % (uploaded_file["title"], uploaded_file["id"])
+    print("File Uploaded: %s (%s)" % (uploaded_file["title"], uploaded_file["id"]))
     logging.info("File Uploaded: %s (%s)" % (uploaded_file["title"], uploaded_file["id"]))
 
     return uploaded_file["id"]
@@ -108,8 +108,8 @@ def share(directory_id, google_username):
                                  emailMessage=args["email_message"]).execute()
     share_url = "https://drive.google.com/a/eng.ucsd.edu/folderview?id=%s&usp=sharing" \
                 % directory_id
-    print "Directory %s Shared with %s" % (directory_id, google_username)
-    print "Share URL: %s" % share_url
+    print("Directory %s Shared with %s" % (directory_id, google_username))
+    print("Share URL: %s" % share_url)
     logging.info("Directory %s Shared with %s" % (directory_id, google_username))
     logging.info("Share URL: %s" % share_url)
 
@@ -175,7 +175,7 @@ if __name__ == '__main__':
 
     # Save the share urls to a csv file
     csv_file = csv.writer(open("%s/share_urls_%s.csv" % (share_path,
-                                                         time.strftime("%Y%m%d%H%M%S")),  "ab+"))
+                                                         time.strftime("%Y%m%d%H%M%S")),  "a"))
 
     for path, dirs, files in os.walk(share_path):
         relative_path = path.replace(share_path, "/")
