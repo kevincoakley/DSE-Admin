@@ -29,6 +29,13 @@ AWS_ACCOUNTS
 9. Add S3 Buckets:
     1. EMR Logs: s3://aws-logs-123456789012-us-east-1 (Replace 123456789012)
     2. Group Bucket: s3://dse-cohort#-group#
+10. Add Cloud Trail
+    1. Trail name: cloudtrail-123456789012 (Replace 123456789012)
+    2. Apply to all regions: Yes
+    3. Read/Write events: All
+    4. Select all S3 buckets in your account
+    5. Create new S3 bucket: Yes
+    6. S3 bucket: cloudtrail-123456789012 (Replace 123456789012)
     
 
 ## Adding Users and Groups
