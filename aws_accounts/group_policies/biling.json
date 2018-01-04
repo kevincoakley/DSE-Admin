@@ -10,6 +10,18 @@
       ],
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Sid": "Stmt1515083518091",
+      "Action": "cloudwatch:*",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    {
+      "Sid": "Stmt1515087715857",
+      "Action": "sns:*",
+      "Effect": "Allow",
+      "Resource": "arn:aws:sns:us-east-1"
     }
   ]
 }
