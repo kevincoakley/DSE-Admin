@@ -43,7 +43,7 @@ AWS_ACCOUNTS
 1. Add Groups. 
     1. Add IAM: `$ add_group.py -k XXX -s XXX -n GROUP_NAME -p group_policies/policy.json -o ~/save/"`
 2. Create the users CSV file, see below and example_users.csv for an example CSV file.
-3. Add users from CSV file: `$ add_users.py -k XXX -s XXX -c ~/Desktop/dse_users.csv -o ~/save/`
+3. Add users from CSV file: `$ add_users.py -k XXX -s XXX -c ~/Desktop/dse_users.csv -u https://cohort#group#.signin.aws.amazon.com/console -o ~/save/`
 4. Use share_credentials to distribute *username_aws_console_password.txt* & *username_aws_credentials.csv*.
 
 
