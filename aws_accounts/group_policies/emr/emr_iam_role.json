@@ -11,7 +11,8 @@
         "iam:ListInstanceProfiles"
       ],
       "Resource": [
-        "arn:aws:iam::*:role/EMR_DefaultRole"
+        "arn:aws:iam::*:role/EMR_DefaultRole",
+        "arn:aws:iam::*:role/EMR_EC2_DefaultRole"
       ]
     }
   ]
