@@ -14,6 +14,23 @@
         "arn:aws:iam::*:role/EMR_DefaultRole",
         "arn:aws:iam::*:role/EMR_EC2_DefaultRole"
       ]
+    },
+    {
+      "Sid": "Stmt1430773872888",
+      "Effect": "Allow",
+      "Action": [
+        "iam:CreateServiceLinkedRole",
+        "iam:PutRolePolicy"
+      ],
+      "Resource": "arn:aws:iam::*:role/aws-service-role/elasticmapreduce.amazonaws.com*/AWSServiceRoleForEMRCleanup*",
+      "Condition": {
+        "StringLike": {
+          "iam:AWSServiceName": [
+            "elasticmapreduce.amazonaws.com",
+            "elasticmapreduce.amazonaws.com.cn"
+          ]
+        }
+      }
     }
   ]
 }
