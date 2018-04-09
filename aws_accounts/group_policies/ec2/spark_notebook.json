@@ -2,6 +2,20 @@
   "Version": "2012-10-17",
   "Statement": [
     {
+      "Sid": "Stmt1411779047762",
+      "Action": [
+        "ec2:RebootInstances",
+        "ec2:StopInstances"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:ec2:*",
+      "Condition": {
+        "StringEquals": {
+          "ec2:Region": "us-east-1"
+        }
+      }
+    },
+    {
       "Sid": "Stmt1411779047765",
       "Action": [
         "ec2:AuthorizeSecurityGroupEgress",
