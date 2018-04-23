@@ -17,7 +17,6 @@
         "ec2:ImportSnapshot",
         "ec2:ImportVolume",
         "ec2:RebootInstances",
-        "ec2:ReleaseAddress",
         "ec2:ResetImageAttribute",
         "ec2:ResetSnapshotAttribute",
         "ec2:RunInstances",
@@ -36,6 +35,8 @@
     {
       "Sid": "Stmt1411779047765",
       "Action": [
+        "ec2:AllocateAddress",
+        "ec2:AssociateAddress",
         "ec2:AuthorizeSecurityGroupEgress",
         "ec2:AuthorizeSecurityGroupIngress",
         "ec2:CreateImage",
@@ -45,6 +46,7 @@
         "ec2:DeleteSecurityGroup",
         "ec2:DeregisterImage",
         "ec2:Describe*",
+        "ec2:DisassociateAddress",
         "ec2:ImportKeyPair",
         "ec2:ModifyImageAttribute",
         "ec2:ModifyInstanceAttribute",
@@ -52,6 +54,7 @@
         "ec2:ModifyVolume",
         "ec2:ModifyVolumeAttribute",
         "ec2:RegisterImage",
+        "ec2:ReleaseAddress",
         "ec2:RequestSpotInstances",
         "ec2:RevokeSecurityGroupEgress",
         "ec2:RevokeSecurityGroupIngress"
