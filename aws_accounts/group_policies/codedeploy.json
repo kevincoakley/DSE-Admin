@@ -1,0 +1,11 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1524606635553",
+      "Action": "codedeploy:*",
+      "Effect": "Allow",
+      "Resource": "arn:aws:codedeploy:us-east-1:*"
+    }
+  ]
+}
