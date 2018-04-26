@@ -6,6 +6,34 @@
       "Action": "codedeploy:*",
       "Effect": "Allow",
       "Resource": "arn:aws:codedeploy:us-east-1:*"
+    },
+    {
+      "Sid": "Stmt1524771885772",
+      "Action": "cloudformation:*",
+      "Effect": "Allow",
+      "Resource": "arn:aws:cloudformation:us-east-1:XXXXXXXXXXXX:*"
+    },
+    {
+      "Sid": "Stmt1430773872001",
+      "Effect": "Allow",
+      "Action": [
+        "iam:GetRole",
+        "iam:GetRolePolicy",
+        "iam:ListRoles"
+      ],
+      "Resource": [
+        "arn:aws:iam::*:role/"
+      ]
+    },
+    {
+      "Sid": "Stmt1430773872002",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": [
+        "arn:aws:iam::XXXXXXXXXXXX:role/CodeDeployServiceRole"
+      ]
     }
   ]
 }
