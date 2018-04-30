@@ -66,6 +66,14 @@
           "ec2:Region": "us-east-1"
         }
       }
+    },
+    {
+      "Sid": "Stmt1525116630554",
+      "Action": [
+        "aws-marketplace:ViewSubscriptions"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
     }
   ]
 }
