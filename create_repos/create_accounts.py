@@ -288,19 +288,20 @@ if __name__ == '__main__':
                                       github_password))
 
         # Create a Github Account
-        create_github_account(github_username, github_email, github_password)
+        #create_github_account(github_username, github_email, github_password)
 
         # Add the student to the class team
-        invite_member_to_team(class_team, github_username)
+        #invite_member_to_team(class_team, github_username)
 
         # If the student repository doesn't exist then create it
+        # TODO: Prefix the year to the repository name (eg: 2018-jsmith)
         student_repo = create_repository(class_organization, email_username, args["class_year"])
 
         # Create a directory for each DSE course using the course_directories list
         create_repository_folders(student_repo)
 
         # Add the student as a collaborator
-        add_member_as_collaborator(student_repo, github_username)
+        #add_member_as_collaborator(student_repo, github_username)
 
         # Get the Instructors Team object
         instructors_team = get_create_team(class_organization, "Instructors")
@@ -309,9 +310,9 @@ if __name__ == '__main__':
         add_repository_to_team(instructors_team, student_repo)
 
         # Login as the student and accept Organization invitation
-        accept_organization_invitation(github_username, github_password)
+        #accept_organization_invitation(github_username, github_password)
 
         # Login as the student and accept the Repository invitation
-        accept_repository_invitation(github_username, github_password)
+        #accept_repository_invitation(github_username, github_password)
 
     logging.info("create_accounts.py finished")
