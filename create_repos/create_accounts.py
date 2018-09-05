@@ -93,22 +93,23 @@ def invite_member_to_team(team, member_name):
 
 
 def create_repository(organization, username, year):
+    repo_name = "%s-%s" % (year, username)
     repository = None
 
     while repository is None:
         for r in organization.repositories(type="private"):
-            if str(r) == "%s/%s" % (organization_name, username):
-                print "Repository %s/%s already exists" % (organization_name, username)
-                logging.info("Repository %s/%s already exists" % (organization_name, username))
+            if str(r) == "%s/%s" % (organization_name, repo_name):
+                print "Repository %s/%s already exists" % (organization_name, repo_name)
+                logging.info("Repository %s/%s already exists" % (organization_name, repo_name))
                 repository = r
 
         if repository is None:
-            logging.info("Creating new repository: %s/%s" % (organization_name, username))
-            repository = organization.create_repository(username, "DSE %s" % year,
+            logging.info("Creating new repository: %s/%s" % (organization_name, repo_name))
+            repository = organization.create_repository(repo_name, "DSE %s" % year,
                                                         private=True,
                                                         auto_init=True)
-            print "Repository %s/%s created" % (organization_name, username)
-            logging.info("Repository %s/%s created" % (organization_name, username))
+            print "Repository %s/%s created" % (organization_name, repo_name)
+            logging.info("Repository %s/%s created" % (organization_name, repo_name))
 
             logging.info("Updating README.md")
             readme = repository.readme()
@@ -280,12 +281,13 @@ if __name__ == '__main__':
     for user_row in csv_users_list:
 
         email_username = user_row[0].split("@")[0]
-        github_username = "%s-%s" % (organization_name, email_username)
+        #github_username = "%s-%s" % (organization_name, email_username)
         github_email = user_row[0]
-        github_password = user_row[1]
+        #github_password = user_row[1]
 
-        logging.info("%s,%s,%s,%s" % (email_username, github_username, github_email,
-                                      github_password))
+        #logging.info("%s,%s,%s,%s" % (email_username, github_username, github_email, github_password))
+        logging.info("%s,%s" % (email_username, github_email))
+
 
         # Create a Github Account
         #create_github_account(github_username, github_email, github_password)
@@ -294,7 +296,6 @@ if __name__ == '__main__':
         #invite_member_to_team(class_team, github_username)
 
         # If the student repository doesn't exist then create it
-        # TODO: Prefix the year to the repository name (eg: 2018-jsmith)
         student_repo = create_repository(class_organization, email_username, args["class_year"])
 
         # Create a directory for each DSE course using the course_directories list
