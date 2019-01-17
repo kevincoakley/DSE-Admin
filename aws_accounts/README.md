@@ -10,7 +10,7 @@ AWS_ACCOUNTS
     1. Name: Cohort# Group#
     2. Email: username+cohort#group#@eng.ucsd.edu
     3. IAM Role: OrganizationAccountAccessRole
-4. Wait for AWS account creation email to be sent, reset the Master Password if necessary
+4. Wait for AWS account creation email to be sent. Once the account has been created, sign into the new account using root credentials (use the email that was used in account creation). Reset the Master Password if necessary
 5. Create an Admin IAM user with the usename dse-admin and a group with the name administrators with full admin access
     1. Give user both programmatic and console access
 6. Change the IAM users sign-in link to cohort#group#
