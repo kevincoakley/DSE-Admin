@@ -5,12 +5,13 @@ AWS_ACCOUNTS
 
 1. Login to master AWS Account
 2. Go to Organizations
-3. Create a new Organization
+3. Add a new Account to the Organization
+4. Select Create Account
     1. Name: Cohort# Group#
     2. Email: username+cohort#group#@eng.ucsd.edu
     3. IAM Role: OrganizationAccountAccessRole
 4. Wait for AWS account creation email to be sent, reset the Master Password if necessary
-5. Create an Admin IAM user and group with full admin access
+5. Create an Admin IAM user with the usename dse-admin and a group with the name administrators with full admin access
 6. Change the IAM users sign-in link to cohort#group#
 7. Create IAM Groups
     1. Billing: group_policies/billing.json
