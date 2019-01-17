@@ -27,7 +27,7 @@ AWS_ACCOUNTS
     2. Add the regular users to all of the IAM groups minus the *_treasurer groups
 9. Add EMR Roles
     1. Install awscli: `$ pip install awscli`
-    2. Configure the credentials awscli for the AWS Account: `$ aws configure`
+    2. Configure the credentials awscli for the AWS Account: `$ aws configure` . Set defualt region as 'us-east-1'
     3. Add the EMR Roles: `$ aws emr create-default-roles`
 10. Add S3 Buckets:
     1. EMR Logs: s3://aws-logs-123456789012-us-east-1 (Replace 123456789012)
