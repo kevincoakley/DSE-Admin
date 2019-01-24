@@ -25,6 +25,16 @@
       "Resource": [
         "arn:aws:iam::*:user/${aws:username}"
       ]
+    },
+    {
+      "Sid": "Stmt1430773872001",
+      "Effect": "Allow",
+      "Action": [
+        "iam:ListInstanceProfiles"
+      ],
+      "Resource": [
+        "arn:aws:iam::*"
+      ]
     }
   ]
 }
