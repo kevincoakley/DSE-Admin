@@ -1,17 +1,27 @@
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1526913683757",
-      "Action": "rds:Describe*",
-      "Effect": "Allow",
-      "Resource": "*"
-    },
-    {
-      "Sid": "Stmt1526913683758",
-      "Action": "rds:*",
-      "Effect": "Allow",
-      "Resource": "arn:aws:rds:us-east-1:*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1526913683757",
+            "Action": "rds:Describe*",
+            "Effect": "Allow",
+            "Resource": "*"
+        },
+        {
+            "Sid": "Stmt1526913683758",
+            "Action": "rds:*",
+            "Effect": "Allow",
+            "Resource": "arn:aws:rds:us-east-1:XXXXXXXXXXXX:*"
+        },
+        {
+            "Action": "iam:CreateServiceLinkedRole",
+            "Effect": "Allow",
+            "Resource": "arn:aws:iam::*:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS",
+            "Condition": {
+                "StringLike": {
+                    "iam:AWSServiceName": "rds.amazonaws.com"
+                }
+            }
+        }
+    ]
 }
