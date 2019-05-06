@@ -29,7 +29,8 @@
         "ec2:ModifyInstanceAttribute",
         "ec2:RequestSpotInstances",
         "ec2:RevokeSecurityGroupEgress",
-        "ec2:RevokeSecurityGroupIngress"
+        "ec2:RevokeSecurityGroupIngress",
+        "ec2:GetPasswordData"
       ],
       "Effect": "Allow",
       "Resource": "*",
