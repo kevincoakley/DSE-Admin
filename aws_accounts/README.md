@@ -14,14 +14,14 @@ AWS_ACCOUNTS
 5. Create an Admin IAM user with the usename dse-admin and a group with the name "administrators" with full admin access (add policy named "AdministratorAccess")
     1. Give user both programmatic and console access
 6. Change the IAM users sign-in link to cohort#group#
-7. Create IAM Groups
+7. Create IAM Groups running setup_groups.py . The following groups are created:
     1. Billing: group_policies/billing.json
     2. EC2: group_policies/ec2/spark_notebook.json
     3. EC2_treasurer: group_policies/ec2/spark_notebook_treasurer.json
     4. EMR: group_policies/emr/emr.json
     5. EMR_treasurer: group_policies/emr/emr_iam_role.json
     6. IAM: group_policies/iam.json
-    7. S3: group_policies/s3/spark_notebook_s3.json (NOTE: EMR logs bucket and group bucket need to be updated for each AWS Account.)
+    7. S3: group_policies/s3/spark_notebook_s3.json (NOTE: EMR logs bucket and group bucket need to be updated for each AWS Account. setup_groups.py does this for you automatically)
 8. Create IAM Users
     1. Add the treasurer to all of the IAM groups
     2. Add the regular users to all of the IAM groups minus the *_treasurer groups
@@ -30,21 +30,22 @@ AWS_ACCOUNTS
     2. Configure the credentials awscli for the AWS Account: `$ aws configure` . Set defualt region as 'us-east-1'
     3. Add the EMR Roles: `$ aws emr create-default-roles`
 10. Add S3 Buckets:
-    1. EMR Logs: s3://aws-logs-123456789012-us-east-1 (Replace 123456789012)
-    2. Group Bucket: s3://dse-cohort#-group#
+    1. EMR Logs: s3://aws-logs-XXXXXXXXXXXX-us-east-1 (Replace XXXXXXXXXXXX with AWS account id)
+    2. Group Bucket: s3://dse-cohort#-group# (replace # with cohort number and group number)
 11. Add Cloud Trail
-    1. Trail name: cloudtrail-123456789012 (Replace 123456789012)
+    1. Trail name: cloudtrail-XXXXXXXXXXXX (Replace XXXXXXXXXXXX with AWS account id)
     2. Apply to all regions: Yes
     3. Read/Write events: All
     4. Select all S3 buckets in your account
     5. Create new S3 bucket: Yes
-    6. S3 bucket: cloudtrail-123456789012 (Replace 123456789012)
+    6. S3 bucket: cloudtrail-XXXXXXXXXXXX (Replace XXXXXXXXXXXX with AWS account id)
     
 
 ## Adding Users and Groups
 
-1. Add Groups. 
-    1. Add IAM: `$ add_group.py -k XXX -s XXX -n GROUP_NAME -p group_policies/policy.json -o ~/save/`
+1. Creating groups: `create_groups.py -k ACCESSS_KEY -s SECRET_ACCESS_KEY -o OUTPUT_DIRECTORY -c COHORT_NUM -g GROUP_NUM -a AWS_ACCOUNT_ID`
+    NOTE: add_group.py is run by setup_groups.py, so it will not need to be run manually. However, it can be run with the following syntax: 
+    Example: Add IAM - `$ add_group.py -k XXX -s XXX -n GROUP_NAME -p group_policies/policy.json -o ~/save/`
 2. Create the users CSV file, see below and example_users.csv for an example CSV file.
 3. Add users from CSV file: `$ add_users.py -k XXX -s XXX -c ~/Desktop/dse_users.csv -u https://cohort#group#.signin.aws.amazon.com/console -o ~/save/`
 4. Use share_credentials to distribute *username_aws_console_password.txt* & *username_aws_credentials.csv*.
