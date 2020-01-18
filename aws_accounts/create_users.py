@@ -75,7 +75,7 @@ if __name__ == "__main__":
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
-    logging.info("add_users.py started")
+    logging.info("create_users.py started")
     logging.info("CSV File: %s" % args['csv_file'])
     logging.info("Output Path: %s" % args['output_path'])
 
@@ -233,4 +233,4 @@ if __name__ == "__main__":
                     logging.info("There was an error creating s3 bucket %s: %s" % (s3_bucket, e))
                     sys.exit("There was an error creating s3 bucket %s: %s" % (s3_bucket, e))
 
-    logging.info("add_users.py finished")
+    logging.info("create_users.py finished")

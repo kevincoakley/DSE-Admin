@@ -36,7 +36,7 @@ def main():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Perform initial setup of groups")
+    parser = argparse.ArgumentParser(description="Perform initial creation of groups")
 
     parser.add_argument("-k",
                         metavar="aws_access_key_id",
@@ -91,9 +91,9 @@ def create_custom_policy(cohort_number, group_number, account_id):
 
 
 def create_group(access_key, secret_access_key, policy_name, policy_path, output_path):
-    script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "add_group.py")
+    script_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "create_group.py")
 
-    command_format = "{0} -k {1} -s {2} -n {3} -p {4} -o {5}"
+    command_format = "python {0} -k {1} -s {2} -n {3} -p {4} -o {5}"
     command = command_format.format(script_path, access_key, secret_access_key, policy_name, policy_path, output_path)
     print("Running command: " + command)
     subprocess.call(command.split(" "))

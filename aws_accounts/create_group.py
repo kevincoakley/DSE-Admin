@@ -46,11 +46,11 @@ if __name__ == "__main__":
         os.makedirs(args['output_path'] + "/logs")
 
     # Save a log to vault/logs/LaunchNotebookServer.log
-    logging.basicConfig(filename=args['output_path'] + "/logs/add_group.log",
+    logging.basicConfig(filename=args['output_path'] + "/logs/create_group.log",
                         format='%(asctime)s %(message)s',
                         level=logging.INFO)
 
-    logging.info("add_group.py started")
+    logging.info("create_group.py started")
     logging.info("IAM Group Name: %s" % args['iam_group_name'])
     logging.info("Policy File: %s" % args['policy_file'])
     logging.info("Output Path: %s" % args['output_path'])
@@ -93,4 +93,4 @@ if __name__ == "__main__":
         sys.exit("There was an error adding the policy to group %s:\n %s" %
                  (args['iam_group_name'], e))
 
-    logging.info("add_group.py finished")
+    logging.info("create_group.py finished")
