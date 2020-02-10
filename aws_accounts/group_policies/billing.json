@@ -22,6 +22,12 @@
       "Action": "sns:*",
       "Effect": "Allow",
       "Resource": "arn:aws:sns:us-east-1"
+    },
+    {
+      "Sid": "VisualEditor0",
+      "Effect": "Allow",
+      "Action": "budgets:*",
+      "Resource": "*"
     }
   ]
 }
