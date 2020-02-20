@@ -14,7 +14,7 @@ AWS_ACCOUNTS
 5. Create an Admin IAM user with the usename dse-admin and a group with the name "administrators" with full admin access (add policy named "AdministratorAccess")
     1. Give user both programmatic and console access
 6. Change the IAM users sign-in link to cohort#group#
-7. Create IAM Groups running create_groups.py . The following groups are created:
+7. Create IAM Groups by running create_groups.py . The following groups are created:
     1. Billing: group_policies/billing.json
     2. EC2: group_policies/ec2/spark_notebook.json
     3. EC2_treasurer: group_policies/ec2/spark_notebook_treasurer.json
