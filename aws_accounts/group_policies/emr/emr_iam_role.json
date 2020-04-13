@@ -1,36 +1,57 @@
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "Stmt1430773872001",
-      "Effect": "Allow",
-      "Action": [
-        "iam:GetInstanceProfile",
-        "iam:GetRole",
-        "iam:PassRole",
-        "iam:ListInstanceProfiles"
-      ],
-      "Resource": [
-        "arn:aws:iam::*:role/EMR_DefaultRole",
-        "arn:aws:iam::*:role/EMR_EC2_DefaultRole"
-      ]
-    },
-    {
-      "Sid": "Stmt1430773872888",
-      "Effect": "Allow",
-      "Action": [
-        "iam:CreateServiceLinkedRole",
-        "iam:PutRolePolicy"
-      ],
-      "Resource": "arn:aws:iam::*:role/aws-service-role/elasticmapreduce.amazonaws.com*/AWSServiceRoleForEMRCleanup*",
-      "Condition": {
-        "StringLike": {
-          "iam:AWSServiceName": [
-            "elasticmapreduce.amazonaws.com",
-            "elasticmapreduce.amazonaws.com.cn"
-          ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "Stmt1430773872001",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetInstanceProfile",
+                "iam:GetRole",
+                "iam:PassRole",
+                "iam:ListInstanceProfiles"
+            ],
+            "Resource": [
+                "arn:aws:iam::*:role/EMR_DefaultRole",
+                "arn:aws:iam::*:role/EMR_EC2_DefaultRole"
+            ]
+        },
+        {
+            "Sid": "Stmt1430773872888",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateServiceLinkedRole",
+                "iam:PutRolePolicy"
+            ],
+            "Resource": "arn:aws:iam::*:role/aws-service-role/elasticmapreduce.amazonaws.com*/AWSServiceRoleForEMRCleanup*",
+            "Condition": {
+                "StringLike": {
+                    "iam:AWSServiceName": [
+                        "elasticmapreduce.amazonaws.com",
+                        "elasticmapreduce.amazonaws.com.cn"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "elasticmapreduce:DeleteEditor",
+                "elasticmapreduce:StartEditor",
+                "elasticmapreduce:StopEditor",
+                "elasticmapreduce:OpenEditorInConsole",
+                "elasticmapreduce:DescribeEditor",
+                "elasticmapreduce:CreateEditor",
+                "elasticmapreduce:ListEditors",
+                "elasticmapreduce:SetTerminationProtection"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": "codecommit:ListRepositories",
+            "Resource": "*"
         }
-      }
-    }
-  ]
+    ]
 }
